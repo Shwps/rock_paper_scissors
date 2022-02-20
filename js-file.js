@@ -9,7 +9,11 @@ const scissorsTxt = "scissors";
 const rockNode = document.querySelector(".rock");
 const paperNode = document.querySelector(".paper");
 const scissorsNode = document.querySelector(".scissors");
-const roundstatus = document.querySelector(".roundstatus");
+const roundStatus = document.querySelector(".roundstatus");
+
+const cpuRockNode = document.querySelector(".cpuRock");
+const cpuPaperNode = document.querySelector(".cpuPaper");
+const cpuScissorsNode = document.querySelector(".cpuScissors");
 
 const playerScore = document.querySelector(".playerScore");
 const cpuScore = document.querySelector(".cpuScore");
@@ -18,62 +22,47 @@ let cpuScoreInt = parseInt(cpuScore.textContent);
 let playerScoreInt = parseInt(playerScore.textContent);
 
 rockNode.addEventListener("click", () => {
+  if (cpuScoreInt === 5 || playerScoreInt === 5) gameReset();
+  rockNode.classList.add("selected");
   playRound(1, computerPlay());
 });
 
 paperNode.addEventListener("click", () => {
+  if (cpuScoreInt === 5 || playerScoreInt === 5) gameReset();
+  paperNode.classList.add("selected");
   playRound(2, computerPlay());
 });
 
 scissorsNode.addEventListener("click", () => {
+  if (cpuScoreInt === 5 || playerScoreInt === 5) gameReset();
+  scissorsNode.classList.add("selected");
   playRound(3, computerPlay());
 });
 
-/* function game() {
-        let playerWins = 0;
-        let cpuWins = 0;
-
-        while (playerWins < 5 && cpuWins < 5) {
-          let playerChoice = symbolTranslator(
-            prompt("Rock, paper or scissors?").toLowerCase().trim()
-          );
-          let computerChoice = computerPlay();
-
-          let currentRound = playRound(playerChoice, computerChoice);
-          if (currentRound === "tied") {
-          } else if (currentRound === "player") {
-            playerWins++;
-          } else if (currentRound === "cpu") {
-            cpuWins++;
-          }
-          console.log("Player wins: " + playerWins + "\nCPU wins: " + cpuWins);
-        }
-      } */
-
 function playRound(playerNum, cpuNum) {
   if (playerNum === cpuNum) {
-    roundstatus.textContent = "tied";
+    roundStatus.textContent = "tied";
   } else if (playerNum === rockNum && cpuNum === scissorsNum) {
-    roundResults(playerNum, cpuNum, "player");
     playerScore.textContent = playerScoreInt += 1;
-    return "player";
+    roundResults("player");
   } else if (playerNum > cpuNum && cpuNum !== rockNum) {
-    roundResults(playerNum, cpuNum, "player");
     playerScore.textContent = playerScoreInt += 1;
-    return "player";
+    roundResults("player");
   } else if (playerNum === paperNum && cpuNum === rockNum) {
-    roundResults(playerNum, cpuNum, "player");
     playerScore.textContent = playerScoreInt += 1;
-    return "player";
+    roundResults("player");
   } else {
+    roundResults("cpu");
     cpuScore.textContent = cpuScoreInt += 1;
-    roundResults(playerNum, cpuNum, "cpu");
-    return "cpu";
   }
 }
 
 function computerPlay() {
-  return getRandomInt();
+  let cpuHand = getRandomInt();
+  if (cpuHand === 1) cpuRockNode.classList.add("selected");
+  else if (cpuHand === 2) cpuPaperNode.classList.add("selected");
+  else if (cpuHand === 3) cpuScissorsNode.classList.add("selected");
+  return cpuHand;
 }
 
 function getRandomInt() {
@@ -82,37 +71,30 @@ function getRandomInt() {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function roundResults(playerNum, cpuNum, winner) {
-  roundstatus.textContent =
-    "Player played: " +
-    symbolTranslator(playerNum) +
-    " CPU played: " +
-    symbolTranslator(cpuNum) +
-    ". The winner is " +
-    winner;
+function roundResults(winner) {
+  if (playerScoreInt === 5) {
+    roundStatus.textContent = "You won the game of Rock, Paper, Scissors";
+    return;
+  } else if (cpuScoreInt === 5) {
+    roundStatus.textContent =
+      "You lost the game of Rock, Paper, Scissors to a computer";
+      return;
+  } else {
+    roundStatus.textContent = winner + " wins!";
+  }
 }
 
-function symbolTranslator(var1) {
-  switch (var1) {
-    case rockNum:
-      return rockTxt;
-      break;
-    case paperNum:
-      return paperTxt;
-      break;
-    case scissorsNum:
-      return scissorsTxt;
-      break;
-    case rockTxt:
-      return rockNum;
-      break;
-    case paperTxt:
-      return paperNum;
-      break;
-    case scissorsTxt:
-      return scissorsNum;
-      break;
-    default:
-      break;
-  }
+function removeTransition(e) {
+  if (e.propertyName !== "transform") return;
+  e.target.classList.remove("selected");
+}
+const buttons = Array.from(document.querySelectorAll(".box"));
+
+buttons.forEach((button) =>
+  button.addEventListener("transitionend", removeTransition)
+);
+
+function gameReset() {
+  playerScore.textContent = playerScoreInt = 0;
+  cpuScore.textContent = cpuScoreInt = 0;
 }
