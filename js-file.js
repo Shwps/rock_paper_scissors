@@ -52,8 +52,8 @@ function playRound(playerNum, cpuNum) {
     playerScore.textContent = playerScoreInt += 1;
     roundResults("player");
   } else {
-    roundResults("cpu");
     cpuScore.textContent = cpuScoreInt += 1;
+    roundResults("cpu");
   }
 }
 
