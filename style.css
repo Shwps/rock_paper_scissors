@@ -65,9 +65,9 @@ a,
 .box {
   width: 150px;
   height: 150px;
-  background-color: rgb(70, 67, 68);
+  background-color: rgb(255, 255, 255);
   font-size: 28px;
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 35px;
   border-radius: 10%;
   display:flex;
@@ -78,6 +78,6 @@ a,
 
 .selected {
   transform:scale(1.1);
-  background-color: rgb(37, 158, 74);
-  box-shadow: 0 0 1rem rgb(105, 201, 134);
+  background-color: rgb(229, 245, 139);
+  box-shadow: 0 0 1rem ;
 }
